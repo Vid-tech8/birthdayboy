@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Birthday Surprise</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+background:linear-gradient(#020111,#191621);
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:sans-serif;
+text-align:center;
+overflow:hidden;
+}
+
+/* moving stars background */
+
+.stars{
+position:absolute;
+width:100%;
+height:100%;
+background:url("https://i.imgur.com/YKY28eT.png");
+z-index:-1;
+animation:moveStars 60s linear infinite;
+}
+
+@keyframes moveStars{
+from{background-position:0 0;}
+to{background-position:10000px 5000px;}
+}
+
+.time{
+font-size:70px;
+font-weight:300;
+letter-spacing:2px;
+}
+
+.unlock{
+margin-top:40px;
+padding:14px 30px;
+border:none;
+border-radius:30px;
+font-size:18px;
+cursor:pointer;
+background:white;
+color:black;
+transition:.3s;
+}
+
+.unlock:hover{
+transform:scale(1.1);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<div id="time" class="time"></div>
+
+<h2>🔒 Birthday Surprise Waiting</h2>
+
+<button class="unlock" onclick="unlock()">Tap To Unlock</button>
+
+<script>
+
+function updateTime(){
+
+let now=new Date()
+
+let h=now.getHours()
+let m=now.getMinutes()
+
+let ampm = h >= 12 ? "PM" : "AM"
+
+h = h % 12
+h = h ? h : 12
+
+if(m<10)m="0"+m
+
+document.getElementById("time").innerHTML = h + ":" + m + " " + ampm
+
+}
+
+setInterval(updateTime,1000)
+
+updateTime()
+
+function unlock(){
+window.location.href="index.html"
+}
+
+</script>
+
+</body>
+</html>
+

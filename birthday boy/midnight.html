@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Midnight Surprise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+margin:0;
+font-family:sans-serif;
+background:black;
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+
+/* night sky */
+
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+background:url("https://i.imgur.com/YKY28eT.png");
+animation:moveStars 60s linear infinite;
+z-index:-2;
+}
+
+@keyframes moveStars{
+from{background-position:0 0;}
+to{background-position:10000px 5000px;}
+}
+
+/* shooting stars */
+
+.shooting-star{
+position:absolute;
+width:3px;
+height:3px;
+background:white;
+box-shadow:0 0 10px white;
+animation:shoot 2.5s linear forwards;
+}
+
+@keyframes shoot{
+0%{transform:translate(0,0);opacity:1}
+100%{transform:translate(-600px,600px);opacity:0}
+}
+
+/* message */
+
+#message{
+font-size:32px;
+margin-top:140px;
+margin-bottom:80px;
+min-height:120px;
+}
+
+/* cake */
+
+.cake{
+position:relative;
+margin:0 auto;
+width:220px;
+height:120px;
+background:#ff8fab;
+border-radius:10px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.cake:active{
+transform:scale(0.95);
+}
+
+.layer{
+position:absolute;
+width:100%;
+height:40px;
+background:#ffb3c1;
+top:-40px;
+border-radius:10px;
+}
+
+.layer2{
+position:absolute;
+width:100%;
+height:40px;
+background:#ffc2d1;
+top:-80px;
+border-radius:10px;
+}
+
+/* candles */
+
+.candle{
+position:absolute;
+top:-130px;
+font-size:50px;
+font-weight:bold;
+color:#ffd60a;
+text-shadow:0 0 10px #ffd60a;
+}
+
+.candle2{left:70px;}
+.candle0{left:120px;}
+
+/* flame */
+
+.flame{
+position:absolute;
+top:-25px;
+left:50%;
+transform:translateX(-50%);
+width:10px;
+height:18px;
+background:orange;
+border-radius:50%;
+box-shadow:0 0 10px orange,0 0 20px yellow;
+animation:flicker 0.25s infinite;
+cursor:pointer;
+}
+
+@keyframes flicker{
+0%{transform:scale(1)}
+50%{transform:scale(1.2)}
+100%{transform:scale(1)}
+}
+
+/* timer */
+
+.timer{
+margin-top:40px;
+font-size:24px;
+}
+
+/* confetti */
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+top:0;
+animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(100vh) rotate(720deg);
+opacity:0;
+}
+}
+
+/* wish */
+
+#wish{
+font-size:36px;
+margin-top:40px;
+opacity:0;
+transition:1s;
+}
+.next-btn{
+padding:14px 28px;
+font-size:18px;
+border:none;
+border-radius:30px;
+background:#ff4d6d;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.next-btn:hover{
+transform:scale(1.1);
+}
+
+.back-button{
+position:fixed;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(10px);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+cursor:pointer;
+z-index:20;
+transition:0.3s;
+}
+
+.back-button:hover{
+background:rgba(255,255,255,0.35);
+transform:scale(1.1);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<h1 id="message"></h1>
+
+<div class="cake" onclick="explodeConfetti()">
+
+<div class="layer"></div>
+<div class="layer2"></div>
+
+<div class="candle candle2">
+2
+<div class="flame" onclick="blowFlame(event,this)"></div>
+</div>
+
+<div class="candle candle0">
+0
+<div class="flame" onclick="blowFlame(event,this)"></div>
+</div>
+
+</div>
+
+<div id="wish">✨ Make a Wish ❤️</div>
+
+<div class="timer">
+❤️ We've been together for:
+<br>
+<span id="loveTimer"></span>
+</div>
+
+<!-- music -->
+
+<audio id="music" autoplay loop>
+<source src="music/song19.mp3" type="audio/mp3">
+</audio>
+ 
+<script>
+
+/* typing message */
+
+const text="Happy 20th Birthday My Love ❤️";
+let i=0;
+
+function type(){
+if(i<text.length){
+document.getElementById("message").innerHTML+=text.charAt(i);
+i++;
+setTimeout(type,80);
+}
+}
+
+type();
+
+/* confetti */
+
+function explodeConfetti(){
+
+for(let i=0;i<120;i++){
+
+let conf=document.createElement("div");
+conf.className="confetti";
+
+conf.style.left=Math.random()*100+"vw";
+conf.style.background="hsl("+Math.random()*360+"deg,100%,50%)";
+
+document.body.appendChild(conf);
+
+setTimeout(()=>{conf.remove()},3000);
+
+}
+
+}
+
+/* candle blowing */
+
+let candlesBlown=0;
+
+function blowFlame(event,flame){
+
+event.stopPropagation();
+
+if(flame.dataset.off==="true") return;
+
+flame.dataset.off="true";
+
+flame.style.animation="none";
+flame.style.background="transparent";
+flame.style.boxShadow="none";
+flame.style.height="0";
+
+candlesBlown++;
+
+if(candlesBlown===2){
+
+document.getElementById("wish").style.opacity="1";
+
+explodeConfetti();
+
+}
+
+}
+
+/* love timer */
+
+const startDate=new Date("2024-01-01");
+
+function updateTimer(){
+
+let now=new Date();
+let diff=now-startDate;
+
+let days=Math.floor(diff/(1000*60*60*24));
+let hours=Math.floor((diff/(1000*60*60))%24);
+let minutes=Math.floor((diff/(1000*60))%60);
+let seconds=Math.floor((diff/1000)%60);
+
+document.getElementById("loveTimer").innerHTML=
+days+" days "+hours+" hours "+minutes+" minutes "+seconds+" seconds";
+
+}
+
+updateTimer();
+setInterval(updateTimer,1000);
+
+/* shooting stars */
+
+setInterval(()=>{
+
+let star=document.createElement("div");
+star.className="shooting-star";
+
+star.style.top=Math.random()*200+"px";
+star.style.left=Math.random()*100+"%";
+
+document.body.appendChild(star);
+
+setTimeout(()=>{star.remove()},2500);
+
+},2000);
+
+</script>
+
+</body>
+</html>
